@@ -3,8 +3,11 @@ import 'package:flutter/services.dart';
 import 'package:icebox_cafe/resources/color_manager.dart';
 import 'package:icebox_cafe/resources/route_manager.dart';
 import 'package:icebox_cafe/resources/theme_manager.dart';
+import 'package:firebase_core/firebase_core.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
     // systemNavigationBarColor: Colors.transparent, // navigation bar color
     statusBarColor: ColorManager.primaryColor,

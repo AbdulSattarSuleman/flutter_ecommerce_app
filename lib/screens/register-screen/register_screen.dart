@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -5,6 +6,7 @@ import 'package:icebox_cafe/resources/color_manager.dart';
 import 'package:icebox_cafe/resources/route_manager.dart';
 import 'package:icebox_cafe/resources/style_manager.dart';
 import 'package:icebox_cafe/resources/text_manager.dart';
+import 'package:icebox_cafe/screens/home-screen/tabs/recent_order_screen.dart';
 import 'package:icebox_cafe/screens/verification-screen/verification_screen.dart';
 import 'package:icebox_cafe/utils/elevated_button.dart';
 
@@ -18,6 +20,9 @@ class RegisterScreen extends StatefulWidget {
 class _RegisterScreenState extends State<RegisterScreen> {
   FocusNode myFocusNode = FocusNode();
   final TextEditingController phoneFieldController = TextEditingController();
+  var phoneNumber = '';
+
+  var countryCode = "+92";
   @override
   void initState() {
     // TODO: implement initState
@@ -33,6 +38,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   @override
   Widget build(BuildContext context) {
+    FirebaseAuth auth = FirebaseAuth.instance;
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -62,6 +68,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
             // Input Field
             TextFormField(
+                onChanged: ((value) {
+                  phoneNumber = value;
+                }),
                 controller: phoneFieldController,
                 onTap: _requestFocus,
                 focusNode: myFocusNode,
@@ -146,7 +155,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 style: ElevatedButton.styleFrom(
                     shape: StadiumBorder(),
                     padding: EdgeInsets.fromLTRB(120, 12, 120, 12)),
-                onPressed: () {
+                onPressed: () async {
                   // Empty Field
                   if (phoneFieldController.text.isEmpty) {
                     showDialog(
@@ -172,13 +181,39 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           );
                         });
                   } else {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (_) => OTPVerificationScreen(
-                                  phoneNumber: phoneFieldController.text,
-                                )));
+                    await auth.verifyPhoneNumber(
+                      phoneNumber: '${countryCode + phoneNumber}',
+                      verificationCompleted:
+                          (PhoneAuthCredential credential) async {
+                        // ANDROID ONLY!
+
+                        // Sign the user in (or link) with the auto-generated credential
+                        await auth.signInWithCredential(credential);
+                      },
+                      codeAutoRetrievalTimeout: (String verificationId) {},
+                      codeSent:
+                          (String verificationId, int? forceResendingToken) {
+                        Future.error(forceResendingToken.toString());
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (_) => OTPVerificationScreen(
+                                      phoneNumber: phoneFieldController.text,
+                                    )));
+                      },
+                      verificationFailed: (FirebaseAuthException error) {
+                        if (error.code == 'invalid-phone-number') {
+                          print('The provided phone number is not valid.');
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (_) => RecentOrderScreen()));
+                        }
+                        Future.error(error);
+                      },
+                    );
                   }
+                  ;
                 },
                 child: Text(
                   'Register',

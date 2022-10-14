@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:icebox_cafe/model/location_model.dart';
 import 'package:icebox_cafe/screens/location-screen/functionality-user-location/get_location_function.dart';
@@ -11,6 +12,8 @@ import '../../resources/images_manager.dart';
 import '../../resources/style_manager.dart';
 import 'components/input_field.dart';
 import 'components/location_list.dart';
+
+// This Screen Is Not Used in Application
 
 class LocationScreen extends StatefulWidget {
   const LocationScreen({Key? key}) : super(key: key);
@@ -42,12 +45,49 @@ class _LocationScreenState extends State<LocationScreen> {
     });
   }
 
+  int _counter = 0;
+  int selectedIndex = 0;
+
+  void _increaseIndex() {
+    setState(() {
+      _counter++;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
           title: Text("Select Your Location"),
         ),
+        bottomNavigationBar: NavigationBar(
+            selectedIndex: selectedIndex,
+            onDestinationSelected: (value) => setState(() {
+                  selectedIndex = value;
+                }),
+            destinations: [
+              NavigationDestination(
+                icon: SvgPicture.asset(ImagesManager.vendIcon),
+                // icon: Icon(CustomIcons.accessibility),
+                label: 'Order',
+                selectedIcon: SvgPicture.asset(ImagesManager.orderIcon),
+              ),
+              NavigationDestination(
+                icon: Icon(Icons.watch_later_outlined),
+                label: 'Recent',
+                // selectedIcon: SvgPicture.asset(ImagesManager.orderIcon),
+              ),
+              NavigationDestination(
+                icon: Icon(Icons.card_giftcard),
+                label: 'Gift Card',
+                // selectedIcon: SvgPicture.asset(ImagesManager.orderIcon),
+              ),
+              NavigationDestination(
+                icon: Icon(Icons.account_circle_outlined),
+                label: 'Account',
+                // selectedIcon: SvgPicture.asset(ImagesManager.orderIcon),
+              ),
+            ]),
         body: _locationModel == null || _locationModel!.isEmpty
             ? Center(
                 child: splashLoader(),
@@ -65,7 +105,7 @@ class _LocationScreenState extends State<LocationScreen> {
                     ),
                     // Text
                     Text(
-                      "NEARBY",
+                      "NEARBY aaa",
                       textAlign: TextAlign.left,
                       style: StyleManager().customTextStyle(
                           14, ColorManager.textColorDark, FontWeight.w600),

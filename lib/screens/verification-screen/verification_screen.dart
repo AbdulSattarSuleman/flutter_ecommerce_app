@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -12,6 +13,8 @@ class OTPVerificationScreen extends StatelessWidget {
   final phoneNumber;
   @override
   Widget build(BuildContext context) {
+    FirebaseAuth auth = FirebaseAuth.instance;
+
     final screenSize = MediaQuery.of(context).size;
     return Scaffold(
       appBar: AppBar(
@@ -121,19 +124,23 @@ class OTPVerificationScreen extends StatelessWidget {
             SizedBox(
               height: screenSize.height * 0.245,
             ),
+            ElevatedButton(
+                style: ElevatedButton.styleFrom(shape: StadiumBorder()),
+                onPressed: () {},
+                child: Text("Verify")),
             // verify Button
-            RoundedButtonWidget(
-              buttonText: "Verify",
-              routeName: Routes.registerInfopRoute,
-              bgColor: ColorManager.primaryColor,
-              txtColor: Colors.white,
-              fontSize: 18,
-              p_left: 130.0,
-              p_top: 12.0,
-              p_right: 130.0,
-              p_bot: 12.0,
-              borderRadius: 30.0,
-            ),
+            // RoundedButtonWidget(
+            //   buttonText: "Verify",
+            //   routeName: Routes.registerInfopRoute,
+            //   bgColor: ColorManager.primaryColor,
+            //   txtColor: Colors.white,
+            //   fontSize: 18,
+            //   p_left: 130.0,
+            //   p_top: 12.0,
+            //   p_right: 130.0,
+            //   p_bot: 12.0,
+            //   borderRadius: 30.0,
+            // ),
             SizedBox(
               height: 40,
             ),

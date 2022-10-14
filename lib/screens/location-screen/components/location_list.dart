@@ -8,14 +8,13 @@ import '../../../model/location_model.dart';
 import '../../../resources/images_manager.dart';
 
 class LocationListTile extends StatefulWidget {
-  const LocationListTile({
-    Key? key,
-    required List<LocationModel>? locationModel,
-  })  : _locationModel = locationModel,
+  LocationListTile(
+      {Key? key, required List<LocationModel>? locationModel, this.brnachId})
+      : _locationModel = locationModel,
         super(key: key);
 
   final List<LocationModel>? _locationModel;
-
+  int? brnachId;
   @override
   State<LocationListTile> createState() => _LocationListTileState();
 }

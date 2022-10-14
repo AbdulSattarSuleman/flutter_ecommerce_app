@@ -54,33 +54,53 @@ class ApiService {
     }
   }
 
-  // Get Products By categories Using API
-  // List<ProductModel>
-  Future<List<ProductsModel>?> getProductByCategoryAPI(int branchId) async {
+  // ignore: body_might_complete_normally_nullable
+  Future<List<ProductsModel>?> fetchProducts(branchId) async {
     try {
-      Map<String, int> qParams = {
-        'branchId': branchId,
+      // double longitude = -80.153206;
+      // double latitude = 25.987219;
+
+      Map<String, String> qParams = {
+        'branchid': "$branchId",
       };
       Map<String, String> header = {
         HttpHeaders.contentTypeHeader: "application/json"
       };
-      final String url = ApiConstants.baseUrl + ApiConstants.productsEndPoint;
-
-      Uri uri = Uri.parse(url);
+      final String locationUrlApi =
+          ApiConstants.baseUrl + ApiConstants.productsEndPoint;
+      Uri uri = Uri.parse(locationUrlApi);
       final finalUri = uri.replace(queryParameters: qParams);
 
-      var response = await http.get(finalUri, headers: header);
-      // On Success Condition
+      var response = await http.get(
+        finalUri,
+        headers: header,
+      );
+      // print("Prody");
+      print(response.body);
+      print("!Decoding");
+      var decodeJson = jsonDecode(response.body);
+      print(decodeJson);
+      print("with decoding");
       if (response.statusCode == 200) {
         print(response.statusCode);
-        print(response.body);
+        log(response.statusCode.toString());
 
-        // List<ProductsModel> _model = productsModelFromJson(response.body);
+        List<ProductsModel> _productModel =
+            productsModelFromJson(response.body.toString())
+                as List<ProductsModel>;
+        print("try body");
+
+        log(response.body.toString());
+        print("Display Products");
+        return _productModel;
+      } else {
+        print("catch body Failed Product to display ");
       }
-    }
-    // On failed Condition
-    catch (e) {
-      Future.error(e.toString());
+      // return _productModel;
+    } catch (e) {
+      // log(e.toString());
+      Future.error(e);
+      print("catch body Failed Product to display ");
     }
   }
 }

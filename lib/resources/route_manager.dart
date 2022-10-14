@@ -56,7 +56,10 @@ class RouteGenerator {
       case Routes.machineDetailRoute:
         return MaterialPageRoute(builder: (_) => ExploreSingleLocationScreen());
       case Routes.menuRoute:
-        return MaterialPageRoute(builder: (_) => MenuScreen());
+        return MaterialPageRoute(
+            builder: (_) => MenuScreen(
+                  productModel: [],
+                ));
       default:
         return unDefinedRoute();
     }

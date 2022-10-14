@@ -1,75 +1,69 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:icebox_cafe/model/product_category_model.dart';
 
 import 'package:icebox_cafe/resources/color_manager.dart';
 import 'package:icebox_cafe/resources/style_manager.dart';
+import 'package:icebox_cafe/services/api_service.dart';
+import 'package:icebox_cafe/utils/functionality/api_function.dart';
 
 // ignore: must_be_immutable
-class MenuScreen extends StatelessWidget {
-  MenuScreen({Key? key}) : super(key: key);
+class MenuScreen extends StatefulWidget {
+  MenuScreen({Key? key, required List<ProductsModel>? productModel})
+      : super(key: key);
+  List<ProductsModel>? productModel;
+  @override
+  State<MenuScreen> createState() => _MenuScreenState();
+}
+
+class _MenuScreenState extends State<MenuScreen> {
   GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey();
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    // APIFunction().getProductsByCategories();
+    // ApiService().getProductByCategoryAPI(1);
+    ApiService().fetchProducts(6);
+  }
+
   @override
   Widget build(BuildContext context) {
     // var screenSize = MediaQuery.of(context).size;
     return Scaffold(
       // backgroundColor: ColorManager.appBarColor,
       key: _scaffoldKey,
+      appBar: AppBar(
+        systemOverlayStyle: SystemUiOverlayStyle(),
+        title: Text(
+          "Menu",
+          style: StyleManager().railwayFont(24, Colors.white, FontWeight.w700),
+        ),
+        backgroundColor: ColorManager.appBarColor,
+        leading: IconButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            icon: Icon(
+              Icons.arrow_back_ios_new,
+              color: Colors.white,
+            )),
+        elevation: 0,
+      ),
       body: SafeArea(
         child: Column(children: [
           Container(
             margin: EdgeInsets.zero,
-            height: 160.0,
+            height: 70.0,
             color: ColorManager.appBarColor,
             child: Stack(
               children: [
-                // Positioned(
-                //   left: 0,
-                //   top: 0,
-                //   child: IconButton(
-                //     icon: Icon(
-                //       Icons.abc_rounded,
-                //       color: Color(0xff49454F),
-
-                //       // color: Color,
-                //       size: 20,
-                //     ),
-                //     onPressed: () {
-                //       print("your menu action here");
-                //       // _scaffoldKey.currentState.openDrawer();
-                //     },
-                //   ),
-                // ),
-                Container(
-                  padding: EdgeInsets.only(top: 20),
-                  color: ColorManager.appBarColor,
-                  width: MediaQuery.of(context).size.width,
-                  height: 50.0,
-                  child: Text(
-                    "Menu",
-                    textAlign: TextAlign.center,
-                    style: StyleManager()
-                        .railwayFont(24, Colors.white, FontWeight.w700),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 20.0),
-                  child: IconButton(
-                    icon: Icon(
-                      Icons.arrow_back_ios_new_rounded,
-                      color: Colors.white,
-                      size: 25,
-                    ),
-                    onPressed: () {
-                      Navigator.pop(context);
-                      print("your menu action here");
-                      // _scaffoldKey.currentState.openDrawer();
-                    },
-                  ),
-                ),
                 Positioned(
-                  // top: 00.0,
+                  top: 5.0,
                   left: 0.0,
                   right: 0.0,
-                  bottom: 10,
+                  // bottom: 10,
                   child: Container(
                     padding: EdgeInsets.symmetric(horizontal: 20.0),
                     child: DecoratedBox(
@@ -101,24 +95,6 @@ class MenuScreen extends StatelessWidget {
                               ),
                             ),
                           ),
-                          // IconButton(
-                          //   icon: Icon(
-                          //     Icons.search,
-                          //     color: Colors.red,
-                          //   ),
-                          //   onPressed: () {
-                          //     print("your menu action here");
-                          //   },
-                          // ),
-                          // IconButton(
-                          //   icon: Icon(
-                          //     Icons.notifications,
-                          //     color: Colors.red,
-                          //   ),
-                          //   onPressed: () {
-                          //     print("your menu action here");
-                          //   },
-                          // ),
                         ],
                       ),
                     ),
@@ -127,6 +103,22 @@ class MenuScreen extends StatelessWidget {
               ],
             ),
           ),
+          FutureBuilder<List<ProductsModel>?>(
+              future: ApiService().fetchProducts(6),
+              builder: (BuildContext context, AsyncSnapshot snaphot) {
+                if (snaphot.hasData) {
+                  return Text(widget.productModel!.length.toString());
+                } else {
+                  return ListView.builder(
+                      itemCount: widget.productModel!.length,
+                      itemBuilder: (context, index) {
+                        return Card(
+                          child: Text(
+                              "${widget.productModel![index].itemsbyCategory}"),
+                        );
+                      });
+                }
+              })
         ]),
       ),
     );

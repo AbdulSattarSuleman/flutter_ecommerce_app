@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "530164451901",
+    "project_id": "pantry-flutter-app",
+    "storage_bucket": "pantry-flutter-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:530164451901:android:87c71f86c99dff72dcb854",
+        "android_client_info": {
+          "package_name": "com.example.icebox_cafe"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "530164451901-4pst4q08tjm4ekd89pp86nbpfis4r3bp.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.icebox_cafe",
+            "certificate_hash": "93efa4ed5055c0b7ae643dec6e7b21d7efa39b95"
+          }
+        },
+        {
+          "client_id": "530164451901-b4a7cktna08ra2k3inf87ggiad6i8anh.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAy-mq6yoD7Nj0BQ2aZO75kgFBFniz_MTQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "530164451901-b4a7cktna08ra2k3inf87ggiad6i8anh.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -8,6 +8,7 @@ import 'package:icebox_cafe/resources/images_manager.dart';
 import 'package:icebox_cafe/resources/route_manager.dart';
 import 'package:icebox_cafe/resources/style_manager.dart';
 import 'package:icebox_cafe/resources/text_manager.dart';
+import 'package:icebox_cafe/screens/home-screen/tabs/account_screen.dart';
 import 'package:icebox_cafe/screens/home-screen/tabs/gift_card_screen.dart';
 import 'package:icebox_cafe/screens/home-screen/tabs/order_screen.dart';
 import 'package:icebox_cafe/screens/home-screen/tabs/recent_order_screen.dart';
@@ -42,59 +43,35 @@ class _HomeScreenState extends State<HomeScreen> {
 
     return Scaffold(
       backgroundColor: Colors.white,
-      // bottomNavigationBar: BottomNavigationBar(
-      //     elevation: 15.0,
-      //     iconSize: 20,
-      //     type: BottomNavigationBarType.shifting,
-      //     selectedItemColor: ColorManager.primaryColor,
-      //     unselectedItemColor: ColorManager.greyColor,
-      //     items: [
-      //       BottomNavigationBarItem(
-      //           icon: SvgPicture.asset(ImagesManager.orderIcon),
-      //           label: 'Order'),
-      //       BottomNavigationBarItem(
-      //           icon: Icon(Icons.watch_later_outlined), label: 'Recent'),
-      //       BottomNavigationBarItem(
-      //           icon: Image(image: AssetImage(ImagesManager.cardIcon)),
-      //           label: 'Gift Card'),
-      //       BottomNavigationBarItem(
-      //           icon: Icon(Icons.account_circle_outlined), label: 'Account'),
+      // bottomNavigationBar: NavigationBar(
+      //     selectedIndex: selectedIndex,
+      //     onDestinationSelected: (value) => setState(() {
+      //           selectedIndex = value;
+      //         }),
+      //     destinations: [
+      //       NavigationDestination(
+      //         icon: SvgPicture.asset(ImagesManager.vendIcon),
+      //         // icon: Icon(CustomIcons.accessibility),
+      //         label: 'Order',
+      //         selectedIcon: SvgPicture.asset(ImagesManager.orderIcon),
+      //       ),
+      //       NavigationDestination(
+      //         icon: Icon(Icons.watch_later_outlined),
+      //         label: 'Recent',
+      //         // selectedIcon: SvgPicture.asset(ImagesManager.orderIcon),
+      //       ),
+      //       NavigationDestination(
+      //         icon: Icon(Icons.card_giftcard),
+      //         label: 'Gift Card',
+      //         // selectedIcon: SvgPicture.asset(ImagesManager.orderIcon),
+      //       ),
+      //       NavigationDestination(
+      //         icon: Icon(Icons.account_circle_outlined),
+      //         label: 'Account',
+      //         // selectedIcon: SvgPicture.asset(ImagesManager.orderIcon),
+      //       ),
       //     ]),
-
-      bottomNavigationBar: NavigationBar(
-          selectedIndex: selectedIndex,
-          onDestinationSelected: (value) => setState(() {
-                selectedIndex = value;
-              }),
-          destinations: [
-            NavigationDestination(
-              icon: SvgPicture.asset(ImagesManager.vendIcon),
-              // icon: Icon(CustomIcons.accessibility),
-              label: 'Order',
-              selectedIcon: SvgPicture.asset(ImagesManager.orderIcon),
-            ),
-            NavigationDestination(
-              icon: Icon(Icons.watch_later_outlined),
-              label: 'Recent',
-              // selectedIcon: SvgPicture.asset(ImagesManager.orderIcon),
-            ),
-            NavigationDestination(
-              icon: Icon(Icons.card_giftcard),
-              label: 'Gift Card',
-              // selectedIcon: SvgPicture.asset(ImagesManager.orderIcon),
-            ),
-            NavigationDestination(
-              icon: Icon(Icons.account_circle_outlined),
-              label: 'Account',
-              // selectedIcon: SvgPicture.asset(ImagesManager.orderIcon),
-            ),
-          ]),
-      body: IndexedStack(index: selectedIndex, children: [
-        OrderScreenUI(widget: widget, screenSize: screenSize),
-        RecentOrderScreen(),
-        GiftCardScreen(),
-        Center(child: Text(selectedIndex.toString())),
-      ]),
+      body: OrderScreenUI(widget: widget, screenSize: screenSize),
     );
   }
 }

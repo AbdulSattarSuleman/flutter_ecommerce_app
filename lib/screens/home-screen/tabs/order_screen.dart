@@ -93,7 +93,7 @@ class OrderScreenUI extends StatelessWidget {
           ),
 
           // Orders Cards
-          OrderList(),
+          OrderList(orderStatus: "Pending", cardItem: 10),
         ],
       ),
     );
