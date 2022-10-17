@@ -28,7 +28,7 @@ class _SplashScreenState extends State<SplashScreen> {
     Timer(Duration(seconds: 3), () {
       _isLoading = false;
       print("loader true");
-      Navigator.push(
+      Navigator.pushReplacement(
           context,
           PageTransition(
               child: SignInScreen(), type: PageTransitionType.rightToLoeft));

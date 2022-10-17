@@ -6,16 +6,44 @@ import 'package:icebox_cafe/resources/color_manager.dart';
 import 'package:icebox_cafe/resources/route_manager.dart';
 import 'package:icebox_cafe/resources/style_manager.dart';
 import 'package:icebox_cafe/resources/text_manager.dart';
+import 'package:icebox_cafe/screens/register-screen/register_screen.dart';
 import 'package:icebox_cafe/utils/elevated_button.dart';
+import 'package:pinput/pinput.dart';
 
-class OTPVerificationScreen extends StatelessWidget {
+class OTPVerificationScreen extends StatefulWidget {
   OTPVerificationScreen({Key? key, this.phoneNumber}) : super(key: key);
   final phoneNumber;
+
+  @override
+  State<OTPVerificationScreen> createState() => _OTPVerificationScreenState();
+}
+
+class _OTPVerificationScreenState extends State<OTPVerificationScreen> {
+  final FirebaseAuth auth = FirebaseAuth.instance;
+  final pinController = TextEditingController();
+  final focusNode = FocusNode();
+  final formKey = GlobalKey<FormState>();
+
   @override
   Widget build(BuildContext context) {
-    FirebaseAuth auth = FirebaseAuth.instance;
-
     final screenSize = MediaQuery.of(context).size;
+
+    const focusedBorderColor = ColorManager.primaryColor;
+    // const fillColor = Color.fromRGBO(243, 246, 249, 0);
+    Color fillColor = ColorManager.primaryColor.withOpacity(0.2);
+    Color borderColor = ColorManager.primaryColor.withOpacity(0.6);
+    final defaultPinTheme = PinTheme(
+      width: 56,
+      height: 56,
+      textStyle: const TextStyle(
+        fontSize: 22,
+        // color: Color.fromRGBO(30, 60, 87, 1),
+      ),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(8),
+        border: Border.all(color: borderColor),
+      ),
+    );
     return Scaffold(
       appBar: AppBar(
         title: Text("Verification"),
@@ -39,7 +67,7 @@ class OTPVerificationScreen extends StatelessWidget {
                         18, ColorManager.textColorDark, FontWeight.w400),
                     children: [
                       TextSpan(
-                          text: " +${phoneNumber}",
+                          text: " +${widget.phoneNumber}",
                           style: StyleManager().customTextStyle(
                               18, ColorManager.primaryColor, FontWeight.w400))
                     ]),
@@ -59,21 +87,78 @@ class OTPVerificationScreen extends StatelessWidget {
             ),
 
             // Verification/OTP Input Field
-            Wrap(
-              alignment: WrapAlignment.center,
-              spacing: 5,
-              direction: Axis.horizontal,
-              runSpacing: 50,
-              children: [
-                OtpTextField(context, true),
-                OtpTextField(context, false),
-                OtpTextField(context, false),
-                OtpTextField(context, false),
-              ],
+            // Wrap(
+            //   alignment: WrapAlignment.center,
+            //   spacing: 5,
+            //   direction: Axis.horizontal,
+            //   runSpacing: 50,
+            //   children: [
+            //     OtpTextField(context, true),
+            //     OtpTextField(context, false),
+            //     OtpTextField(context, false),
+            //     OtpTextField(context, false),
+            //   ],
+            // ),
+
+            // Pinput(
+            //   length: 6,
+            // ),
+            Pinput(
+              length: 4,
+              controller: pinController,
+              focusNode: focusNode,
+              androidSmsAutofillMethod:
+                  AndroidSmsAutofillMethod.smsUserConsentApi,
+              listenForMultipleSmsOnAndroid: true,
+              defaultPinTheme: defaultPinTheme,
+              // validator: (value) {
+              //   return value == "" ? null : 'Pin is incorrect';
+              // },
+              // onClipboardFound: (value) {
+              //   debugPrint('onClipboardFound: $value');
+              //   pinController.setText(value);
+              // },
+              hapticFeedbackType: HapticFeedbackType.disabled,
+              onCompleted: (pin) {
+                debugPrint('onCompleted: $pin');
+              },
+              onChanged: (value) {
+                debugPrint('onChanged: $value');
+              },
+              cursor: Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Container(
+                    margin: const EdgeInsets.only(bottom: 20),
+                    width: 1,
+                    height: 20,
+                    color: focusedBorderColor,
+                  ),
+                ],
+              ),
+              focusedPinTheme: defaultPinTheme.copyWith(
+                decoration: defaultPinTheme.decoration!.copyWith(
+                  borderRadius: BorderRadius.circular(8),
+                  // border: Border.all(color: focusedBorderColor),
+                ),
+              ),
+              submittedPinTheme: defaultPinTheme.copyWith(
+                decoration: defaultPinTheme.decoration!.copyWith(
+                  color: fillColor,
+                  borderRadius: BorderRadius.circular(8),
+                  border:
+                      Border.all(color: focusedBorderColor.withOpacity(0.1)),
+                ),
+              ),
+
+              errorPinTheme: defaultPinTheme.copyBorderWith(
+                border: Border.all(color: Colors.redAccent),
+              ),
+              obscureText: false,
             ),
 
             SizedBox(
-              height: 100,
+              height: 50,
             ),
             // Receive code text
             Text(
@@ -125,9 +210,21 @@ class OTPVerificationScreen extends StatelessWidget {
               height: screenSize.height * 0.245,
             ),
             ElevatedButton(
-                style: ElevatedButton.styleFrom(shape: StadiumBorder()),
-                onPressed: () {},
-                child: Text("Verify")),
+                style: ElevatedButton.styleFrom(
+                    shape: StadiumBorder(),
+                    padding: EdgeInsets.fromLTRB(120, 12, 120, 12)),
+                onPressed: () async {
+                  // Create a PhoneAuthCredential with the code
+                  PhoneAuthCredential credential = PhoneAuthProvider.credential(
+                      verificationId: RegisterScreen.verify, smsCode: 'sdas');
+
+                  // Sign the user in (or link) with the credential
+                  await auth.signInWithCredential(credential);
+                },
+                child: Text(
+                  "Verify",
+                  style: TextStyle(fontSize: 18),
+                )),
             // verify Button
             // RoundedButtonWidget(
             //   buttonText: "Verify",
@@ -152,6 +249,7 @@ class OTPVerificationScreen extends StatelessWidget {
 }
 
 Widget OtpTextField(BuildContext context, bool autoFocus) {
+  var code = '';
   return Container(
     height: MediaQuery.of(context).size.shortestSide * 0.13,
     decoration: BoxDecoration(
@@ -198,6 +296,7 @@ Widget OtpTextField(BuildContext context, bool autoFocus) {
         // maxLength: 1,
         minLines: 1,
         onChanged: (value) {
+          code = value;
           if (value.length == 1) {
             FocusScope.of(context).nextFocus();
           }

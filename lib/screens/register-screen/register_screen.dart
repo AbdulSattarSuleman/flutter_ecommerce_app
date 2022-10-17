@@ -12,7 +12,7 @@ import 'package:icebox_cafe/utils/elevated_button.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({Key? key}) : super(key: key);
-
+  static String verify = '';
   @override
   State<RegisterScreen> createState() => _RegisterScreenState();
 }
@@ -193,6 +193,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       codeAutoRetrievalTimeout: (String verificationId) {},
                       codeSent:
                           (String verificationId, int? forceResendingToken) {
+                        RegisterScreen.verify = verificationId;
                         Future.error(forceResendingToken.toString());
                         Navigator.push(
                             context,
